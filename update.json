@@ -1,9 +1,9 @@
 {
-  "version": "1.0.2",
-  "version_code": 3,
+  "version": "1.0.3",
+  "version_code": 4,
   "package_name": "com.xiaoyinghe.tv",
-  "apk_url": "https://github.com/zhoutinglan/xiaoyinghe/releases/download/v1.0.2/xiaoyinghe-v1.0.2.apk",
-  "sha256": "5c6db79d460e2a1be3d91dae636cd0565bb755331bf0babed93242eb257209f2",
-  "size": 42922147,
+  "apk_url": "https://github.com/zhoutinglan/xiaoyinghe/releases/download/v1.0.3/xiaoyinghe-v1.0.3.apk",
+  "sha256": "6e97448afa96d2ac07a8b351fe9384368b017974cf397b3403c571a215ad124f",
+  "size": 42931762,
   "signer_sha256": "30404964624c440e7b3cabc660535bed4a966f2237fdc34d75418d120940c46d"
 }
