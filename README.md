@@ -22,7 +22,7 @@
 
 ## 📲 下载
 
-- 小影盒：[下载 v1.0.0](https://gh-proxy.com/https://github.com/zhoutinglan/xiaoyinghe/releases/download/v1.0.0/xiaoyinghe-v1.0.0.apk) · [所有版本](https://github.com/zhoutinglan/xiaoyinghe/releases)
+- 小影盒：[下载 v1.0.1](https://gh-proxy.com/https://github.com/zhoutinglan/xiaoyinghe/releases/download/v1.0.1/xiaoyinghe-v1.0.1.apk) · [所有版本](https://github.com/zhoutinglan/xiaoyinghe/releases)
 
 ## ✨ 功能说明
 
