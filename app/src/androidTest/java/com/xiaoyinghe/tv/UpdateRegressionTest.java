@@ -197,7 +197,7 @@ public class UpdateRegressionTest extends InstrumentationTestCase {
         static final ArrayList<String> urls = new ArrayList<>();
         static int networkFailures;
         public FakeWorker(Context context, WorkerParameters parameters) { super(context, parameters); }
-        @Override protected Response request(String url) throws IOException {
+        @Override protected Response request(String url, long fromByte) throws IOException {
             urls.add(url);
             if (networkFailures > 0) { networkFailures--; throw new IOException("Test network failure"); }
             if (bodies.isEmpty()) throw new IOException("No test response");
