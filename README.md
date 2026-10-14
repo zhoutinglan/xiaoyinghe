@@ -1,4 +1,4 @@
-# <p align="center"><img src="https://github.com/kukuqi666/TVboxOSC/blob/main/website/tvbox/images/logo.png?raw=true" width="150px" /><br>​<p align="center">[TVboxOSC](https://github.com/kukuqi666/TVboxOSC "TVboxOSC")   <p align="center">一个开源免费无广告的TVBox🏅
+# <p align="center"><img src="website/tvbox/images/logo.png" width="150px" /><br>​<p align="center">小影盒   <p align="center">一个开源免费无广告的 TVBox 播放器
 
 <div align="center">
 
@@ -25,7 +25,7 @@
 - 本仓库聚合了APP、解析源、直播源等项目，总之你要的一个仓库全搞定(拉到👇有福利)
 
 **3.0.0 史诗级大更新：UI 重做，修复已知 Bug，完善核心功能。**
-TVboxOSC 从 **3.0.0** 开始使用应用名 `TVboxOSC`、包名 `com.kukuqi.tvbox.osc`。
+TVboxOSC 从 **3.0.0** 开始使用应用名 `TVboxOSC`、包名 `com.xiaoyinghe.tv`。
 保留原有半透明风格，完善来源、壁纸、直播和本地视频功能，历史和收藏在首页，设置集中在“我的”。
 关于页面重新设计，新增更新动画、自动检测新版本和 Wi-Fi 后台下载，完成后由用户确认安装。
 2.x 使用不同包名，首次安装 3.x 为独立应用，旧数据不会自动迁移。
@@ -56,13 +56,15 @@ https://github.com/UndCover/PyramidStore/
 
 ## 📲软件合集（软件安装）
 ### TVBox for Android
-- TVboxOSC：[下载 v3.0.3](https://gh-proxy.com/https://github.com/kukuqi666/TVboxOSC/releases/download/v3.0.3/TVboxOSC-v3.0.3.apk) · [所有版本](https://github.com/kukuqi666/TVboxOSC/releases)
+- 小影盒：[下载 v1.0.0](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/releases) · [所有版本](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/releases)
 
 
 ## 🎁福利18+
-- R18: [R18](https://raw.githubusercontent.com/kukuqi666/TVboxOSC/main/website/tvbox/R18.json)
+- R18: [R18](website/tvbox/R18.json)
 
 ## 𝟭. 更新记录
+
+>* **小影盒 v1.0.0：** 首个版本。基于 TVboxOSC 3.0.3 源码二次开发：应用名与包名独立、清空内置订阅源（全部由用户自行导入）、改用独立签名密钥、更新检查与发布流程接入自己的仓库。
 
 >* **2026/10/10 TVboxOSC v3.0.3：** 发布签名 APK，同步应用内更新清单和下载链接。
 

@@ -21,7 +21,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.kukuqi.tvbox.osc.player.R;
+import com.xiaoyinghe.tv.player.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

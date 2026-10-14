@@ -190,12 +190,12 @@
 -dontwarn com.google.android.exoplayer2.**
 
 # 实体类
--keep class com.kukuqi.tvbox.osc.bean.** { *; }
+-keep class com.xiaoyinghe.tv.bean.** { *; }
 
 #CardView
--keep class com.kukuqi.tvbox.osc.ui.tv.widget.card.**{*;}
+-keep class com.xiaoyinghe.tv.ui.tv.widget.card.**{*;}
 #ViewObj
--keep class com.kukuqi.tvbox.osc.ui.tv.widget.ViewObj{
+-keep class com.xiaoyinghe.tv.ui.tv.widget.ViewObj{
     <methods>;
 }
 

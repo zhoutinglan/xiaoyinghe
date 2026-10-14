@@ -1,10 +1,10 @@
 package com.github.catvod.crawler;
 
 
-import com.kukuqi.tvbox.osc.base.App;
-import com.kukuqi.tvbox.osc.util.LOG;
-import com.kukuqi.tvbox.osc.util.MD5;
-import com.kukuqi.tvbox.osc.util.js.JsSpider;
+import com.xiaoyinghe.tv.base.App;
+import com.xiaoyinghe.tv.util.LOG;
+import com.xiaoyinghe.tv.util.MD5;
+import com.xiaoyinghe.tv.util.js.JsSpider;
 import com.lzy.okgo.OkGo;
 
 import java.io.File;
@@ -82,8 +82,8 @@ public class JsLoader {
             }
         }
         try {
-            if (com.kukuqi.tvbox.osc.util.SourceManager.isLocal(jar)) {
-                com.kukuqi.tvbox.osc.util.SourceManager.copyLocal(jar, cache);
+            if (com.xiaoyinghe.tv.util.SourceManager.isLocal(jar)) {
+                com.xiaoyinghe.tv.util.SourceManager.copyLocal(jar, cache);
             } else try (Response response = OkGo.<File>get(jar).execute()) {
                 if (!response.isSuccessful() || response.body() == null) throw new java.io.IOException("模块下载失败");
                 if (cache.exists() && !cache.delete()) throw new java.io.IOException("旧模块缓存无法替换");

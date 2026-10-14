@@ -8,10 +8,10 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="22dp" android:gravity="center_vertical">
             <ImageView android:layout_width="64dp" android:layout_height="64dp" android:src="@mipmap/ic_launcher"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/xyh_app_name" />
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:layout_marginStart="16dp" android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/app_name"
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/xyh_app_name"
                     android:textSize="24sp" android:textStyle="bold" android:textColor="@color/text_foreground" />
                 <TextView android:id="@+id/tv_about_version" android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_marginTop="5dp" android:textSize="13sp" android:textColor="@color/text_sub_foreground" />
@@ -67,9 +67,7 @@
         <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="8dp"
             android:background="@color/gray_darker_press_alpha" />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp"
-            android:text="联系作者" android:textSize="12sp" android:textColor="@color/text_sub_foreground" />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
-            android:text="WeChat：wnfng666   ·   QID：wnfng66" android:textSize="13sp" android:textIsSelectable="true"
-            android:textColor="@color/text_foreground" />
+            android:text="本应用基于开源项目 TVBox 二次开发，遵循 AGPL-3.0 协议。" android:textSize="12sp"
+            android:textColor="@color/text_sub_foreground" />
     </LinearLayout>
 </ScrollView>

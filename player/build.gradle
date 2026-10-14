@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.kukuqi.tvbox.osc.player'
+    namespace 'com.xiaoyinghe.tv.player'
     compileSdkVersion 34
 
     defaultConfig {

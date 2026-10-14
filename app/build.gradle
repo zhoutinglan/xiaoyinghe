@@ -1,15 +1,25 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 
-def tvBoxSigningStore = rootProject.file('TVBoxOSC.jks')
-def tvBoxKeyAlias = System.getenv('TVBOX_KEY_ALIAS') ?: 'TVBoxOSC'
-def tvBoxKeyPassword = System.getenv('TVBOX_KEY_PASSWORD') ?: 'TVBoxOSC'
-def tvBoxStorePassword = System.getenv('TVBOX_STORE_PASSWORD') ?: 'TVBoxOSC'
+// Release signing: read keystore.properties (local, git-ignored) or the CI environment variables.
+// No password is ever stored in the repository.
+def releaseKeystoreProps = new java.util.Properties()
+def releaseKeystoreFile = rootProject.file('keystore.properties')
+if (releaseKeystoreFile.exists()) {
+    releaseKeystoreFile.withInputStream { releaseKeystoreProps.load(it) }
+}
+def releaseSigningStore = rootProject.file(releaseKeystoreProps['storeFile'] ?: 'xiaoyinghe.jks')
+def releaseKeyAlias = System.getenv('XYH_KEY_ALIAS') ?: releaseKeystoreProps['keyAlias']
+def releaseKeyPassword = System.getenv('XYH_KEY_PASSWORD') ?: releaseKeystoreProps['keyPassword']
+def releaseStorePassword = System.getenv('XYH_STORE_PASSWORD') ?: releaseKeystoreProps['storePassword']
 
 def verifyReleaseSigning = tasks.register('verifyReleaseSigning') {
     doLast {
-        if (!tvBoxSigningStore.exists()) {
-            throw new GradleException('Release requires TVBoxOSC.jks and the fixed TVBOX signing credentials. Use assembleDebug for local development.')
+        if (!releaseSigningStore.exists()) {
+            throw new GradleException("Release requires ${releaseSigningStore.name} plus signing credentials (keystore.properties or XYH_* variables). Use assembleDebug for local development.")
+        }
+        if (!releaseKeyAlias || !releaseKeyPassword || !releaseStorePassword) {
+            throw new GradleException('Release signing credentials are missing. Fill keystore.properties or set XYH_KEY_ALIAS / XYH_KEY_PASSWORD / XYH_STORE_PASSWORD.')
         }
     }
 }
@@ -18,19 +28,23 @@ tasks.configureEach { task ->
 }
 
 android {
-    namespace 'com.kukuqi.tvbox.osc'
+    namespace 'com.xiaoyinghe.tv'
     compileSdkVersion 34
     useLibrary 'android.test.runner'
     useLibrary 'android.test.base'
 
     defaultConfig {
-        applicationId 'com.kukuqi.tvbox.osc'
+        applicationId 'com.xiaoyinghe.tv'
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 303
-        versionName '3.0.3'
+        versionCode 1
+        versionName '1.0.0'
         multiDexEnabled true
-        testInstrumentationRunner 'com.kukuqi.tvbox.osc.RegressionTestRunner'
+        testInstrumentationRunner 'com.xiaoyinghe.tv.RegressionTestRunner'
+        // 你的项目地址：同时决定“应用内更新”和“关于页-项目地址”。
+        // 改 gradle.properties 里的 project.owner / project.repo 即可，无需改代码。
+        buildConfigField "String", "PROJECT_OWNER", '"' + (project.findProperty('project.owner') ?: 'YOUR_GITHUB_USER') + '"'
+        buildConfigField "String", "PROJECT_REPO", '"' + (project.findProperty('project.repo') ?: 'xiaoyinghe') + '"'
         //设置room的Schema的位置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -50,7 +64,7 @@ android {
 
         // Apk 输出配置
         variant.outputs.all { output ->
-            outputFileName = 'TVboxOSC-v' + variant.versionName + '.apk'
+            outputFileName = 'xiaoyinghe-v' + variant.versionName + '.apk'
         }
     }
 
@@ -60,24 +74,24 @@ android {
 
     signingConfigs {
         config {
-            if (tvBoxSigningStore.exists()) {
-                keyAlias tvBoxKeyAlias
-                keyPassword tvBoxKeyPassword
-                storeFile tvBoxSigningStore
-                storePassword tvBoxStorePassword
+            if (releaseSigningStore.exists()) {
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+                storeFile releaseSigningStore
+                storePassword releaseStorePassword
             }
         }
     }
 
     buildTypes {
         debug {
-            if (tvBoxSigningStore.exists()) {
+            if (releaseSigningStore.exists()) {
                 signingConfig signingConfigs.config
             }
         }
 
         release {
-            if (tvBoxSigningStore.exists()) {
+            if (releaseSigningStore.exists()) {
                 signingConfig signingConfigs.config
             }
             minifyEnabled false
@@ -118,9 +132,9 @@ def generateReleaseNotes = tasks.register('generateReleaseNotes') {
         def directory = generatedNotes.get().asFile
         directory.mkdirs()
         def entry = notesSource.exists() ? notesSource.readLines('UTF-8').find { line ->
-            line.contains("TVboxOSC v${android.defaultConfig.versionName}：")
+            line.contains("小影盒 v${android.defaultConfig.versionName}：")
         } : null
-        def notes = entry ? "TVboxOSC ${android.defaultConfig.versionName}\n\n${entry.replaceFirst('^>\\*\\s*', '')}" : "TVboxOSC ${android.defaultConfig.versionName}\n功能改进与问题修复。详细记录可通过项目地址查看。"
+        def notes = entry ? "小影盒 ${android.defaultConfig.versionName}\n\n${entry.replaceFirst('^>\\*\\s*', '')}" : "小影盒 ${android.defaultConfig.versionName}\n功能改进与问题修复。详细记录可通过项目地址查看。"
         new File(directory, 'release-notes.txt').setText(notes.replaceAll('(?m)^#+ ', '').replace('**', '').replace('`', ''), 'UTF-8')
     }
 }

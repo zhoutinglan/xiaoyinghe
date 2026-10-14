@@ -31,9 +31,25 @@ def version_tuple(version):
     return tuple(map(int, version.removeprefix('v').split('.')))
 
 
+def default_repository(root=Path('.')):
+    """Fallback repository, read from gradle.properties so there is one source of truth."""
+    try:
+        text = (root / 'gradle.properties').read_text(encoding='utf-8')
+    except OSError:
+        return ''
+    owner = re.search(r'^project\.owner=(.+)$', text, re.M)
+    repo = re.search(r'^project\.repo=(.+)$', text, re.M)
+    if not owner or not repo:
+        return ''
+    owner, repo = owner.group(1).strip(), repo.group(1).strip()
+    if not owner or not repo or owner == 'YOUR_GITHUB_USER':
+        return ''
+    return owner + '/' + repo
+
+
 def github_api(path):
     request = urllib.request.Request('https://api.github.com/repos/' + os.environ['GITHUB_REPOSITORY'] + '/' + path,
-                                    headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'User-Agent': 'TVboxOSC-release',
+                                    headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'User-Agent': 'xiaoyinghe-release',
                                              'Accept': 'application/vnd.github+json'})
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -59,7 +75,8 @@ def plan():
         manifest = json.loads(Path('update.json').read_text(encoding='utf-8'))
         mode = 'none' if manifest.get('version') == version and manifest.get('sha256') else 'sync'
     else:
-        result = subprocess.run(['git', 'rev-list', '-n', '1', tag], capture_output=True, text=True)
+        result = subprocess.run(['git', 'rev-list', '-n', '1', tag], capture_output=True, text=True,
+                                encoding='utf-8', errors='replace')
         if result.returncode == 0 and result.stdout.strip() != os.environ['GITHUB_SHA']:
             raise ValueError('Existing tag points to another commit; published tags are immutable')
         if latest:
@@ -77,15 +94,17 @@ def plan():
 
 def metadata(apk, output, repository, aapt, apksigner):
     version, code, package = app_version()
-    if apk.name != f'TVboxOSC-v{version}.apk':
+    if apk.name != f'xiaoyinghe-v{version}.apk':
         raise ValueError('Unexpected APK filename: ' + apk.name)
-    badging = subprocess.check_output([aapt, 'dump', 'badging', str(apk)], text=True)
+    badging = subprocess.check_output([aapt, 'dump', 'badging', str(apk)], text=True,
+                                      encoding='utf-8', errors='replace')
     expected = f"package: name='{package}' versionCode='{code}' versionName='{version}'"
     if not badging.startswith(expected):
         raise ValueError('APK package/version differs from app/build.gradle')
     if 'application-debuggable' in badging:
         raise ValueError('Refusing to publish a debuggable APK')
-    signatures = subprocess.check_output([apksigner, 'verify', '--verbose', '--print-certs', str(apk)], text=True)
+    signatures = subprocess.check_output([apksigner, 'verify', '--verbose', '--print-certs', str(apk)], text=True,
+                                         encoding='utf-8', errors='replace')
     signer = re.search(r'Signer #1 certificate SHA-256 digest: ([a-fA-F0-9]{64})', signatures)
     if not signer:
         raise ValueError('APK has no verified signing certificate')
@@ -112,19 +131,20 @@ def sync(manifest_path, root=Path('.')):
             raise ValueError('Refusing to replace a newer update manifest')
     readme_path = root / 'README.md'
     text = readme_path.read_text(encoding='utf-8')
-    text, count = re.subn(r'^- TVboxOSC：.*$',
-                         f"- TVboxOSC：[下载 v{version}](https://gh-proxy.com/{manifest['apk_url']}) · [所有版本](https://github.com/"
-                         + os.environ.get('GITHUB_REPOSITORY', 'kukuqi666/TVboxOSC') + '/releases)', text, count=1, flags=re.M)
+    repository = os.environ.get('GITHUB_REPOSITORY') or default_repository(root)
+    text, count = re.subn(r'^- 小影盒：.*$',
+                         f"- 小影盒：[下载 v{version}](https://gh-proxy.com/{manifest['apk_url']}) · [所有版本](https://github.com/"
+                         + repository + '/releases)', text, count=1, flags=re.M)
     if count != 1:
-        raise ValueError('README TVboxOSC download entry missing')
-    if f'TVboxOSC v{version}：' not in text:
+        raise ValueError('README 小影盒 download entry missing')
+    if f'小影盒 v{version}：' not in text:
         date = datetime.datetime.now(datetime.timezone.utc).strftime('%Y/%m/%d')
         summary = ('史诗级大更新：UI 重做，修复已知 Bug；完善来源、壁纸、直播、本地视频与关于页面，新增更新动画、自动检测及 Wi-Fi 后台下载，支持 main 版本变更自动发布。'
                    if version == '3.0.0' else '发布签名 APK，同步应用内更新清单和下载链接。')
         heading = '## 𝟭. 更新记录'
         if heading not in text:
             raise ValueError('README release history heading missing')
-        text = text.replace(heading, heading + f'\n\n>* **{date} TVboxOSC v{version}：** {summary}', 1)
+        text = text.replace(heading, heading + f'\n\n>* **{date} 小影盒 v{version}：** {summary}', 1)
     current_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     readme_path.write_text(text, encoding='utf-8')
 
@@ -144,6 +164,6 @@ if __name__ == '__main__':
     if args.command == 'plan':
         plan()
     elif args.command == 'metadata':
-        metadata(args.apk, args.output, os.environ.get('GITHUB_REPOSITORY', 'kukuqi666/TVboxOSC'), args.aapt, args.apksigner)
+        metadata(args.apk, args.output, os.environ.get('GITHUB_REPOSITORY') or default_repository(), args.aapt, args.apksigner)
     else:
         sync(args.manifest)

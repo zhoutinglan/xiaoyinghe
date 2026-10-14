@@ -107,7 +107,7 @@
                 android:text="12:00"
                 android:textColor="@color/white" />
 
-            <com.kukuqi.tvbox.osc.ui.widget.MyBatteryView
+            <com.xiaoyinghe.tv.ui.widget.MyBatteryView
                 android:id="@+id/battery"
                 android:layout_width="26dp"
                 android:layout_height="14dp"
@@ -155,7 +155,7 @@
 
     </LinearLayout>
 
-    <com.kukuqi.tvbox.osc.subtitle.widget.SimpleSubtitleView
+    <com.xiaoyinghe.tv.subtitle.widget.SimpleSubtitleView
         android:id="@+id/subtitle_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
