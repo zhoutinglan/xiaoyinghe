@@ -76,10 +76,11 @@ CI 环境则通过仓库 Secrets 提供：`XYH_KEYSTORE_BASE64`、`XYH_KEY_ALIAS
 | 触发条件 | 自动行为 |
 | --- | --- |
 | PR / 普通提交到 main | 构建 Debug、运行单元测试，产物保留 14 天 |
-| main 上 `versionCode` 有变化 | 构建签名 Release，创建 Tag 并发布 APK，同步 `update.json` 与本文档 |
+| main 上 `versionCode` 有变化 | 构建固定签名的 Release，创建 Tag 并发布 APK |
 | 手动推送 `v*` Tag | 校验 Tag 与 `versionName` 一致后发布 |
+| Release 发布完成 | 把真实 APK 的 `update.json`、README 下载链接和更新记录同步回 main |
 
-发新版本只需要：改 `app/build.gradle` 里的 `versionCode` 和 `versionName` → 合并到 main → 等待自动发布完成。
+发新版本只需要：改 `app/build.gradle` 里的 `versionCode` 和 `versionName` → 合并到 main → 等待自动发布完成。已公开发布的版本不会重复发布；发布失败时可在 GitHub Actions 里重新运行对应流程。
 
 ## 📄 开源协议
 
