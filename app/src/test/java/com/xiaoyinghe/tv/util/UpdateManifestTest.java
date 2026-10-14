@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class UpdateManifestTest {
     private static final String PACKAGE = "com.xiaoyinghe.tv";
     private static final String JSON = "{\"version\":\"3.0.0\",\"version_code\":300,\"package_name\":\"com.xiaoyinghe.tv\","
-            + "\"apk_url\":\"https://github.com/YOUR_GITHUB_USER/xiaoyinghe/releases/download/v3.0.0/xiaoyinghe-v3.0.0.apk\","
+            + "\"apk_url\":\"https://github.com/zhoutinglan/xiaoyinghe/releases/download/v3.0.0/xiaoyinghe-v3.0.0.apk\","
             + "\"size\":3,\"sha256\":\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\"}";
 
     @Test public void versionCodeControlsUpgradeAndPreventsDowngrade() {

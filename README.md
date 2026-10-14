@@ -5,18 +5,18 @@
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=900&size=22&duration=4000&pause=1000&color=140900&center=true&vCenter=true&width=550&height=30&lines=%E2%AD%90%E4%BC%98%E8%B4%A8%E6%8E%A5%E5%8F%A3%C2%B7%E7%9B%B4%E6%92%AD%E6%BA%90%C2%B7%E7%9B%B8%E5%85%B3%E8%BD%AF%E4%BB%B6%E5%92%8C%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%9C%E9%9B%86%E5%88%86%E4%BA%AB%E2%AD%90)](https://git.io/typing-svg)
 
-您是第  <img src="https://access-counter.vercel.app/api/counter?name=kukuqi666" />位访问者
+您是第  <img src="https://access-counter.vercel.app/api/counter?name=zhoutinglan" />位访问者
 <br><br>
 <img src="https://v2.jinrishici.com/one.svg?font-size=24&spacing=2&color=DeepPink ">
 </div>
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/YOUR_GITHUB_USER/xiaoyinghe?logo=Undertale)](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/stargazers)
-![forks](https://img.shields.io/github/forks/YOUR_GITHUB_USER/xiaoyinghe.svg)
-![tag](https://img.shields.io/github/tag/YOUR_GITHUB_USER/xiaoyinghe.svg)
-![release](https://img.shields.io/github/release/YOUR_GITHUB_USER/xiaoyinghe.svg)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/YOUR_GITHUB_USER/xiaoyinghe)](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/pulls)
+[![GitHub stars](https://img.shields.io/github/stars/zhoutinglan/xiaoyinghe?logo=Undertale)](https://github.com/zhoutinglan/xiaoyinghe/stargazers)
+![forks](https://img.shields.io/github/forks/zhoutinglan/xiaoyinghe.svg)
+![tag](https://img.shields.io/github/tag/zhoutinglan/xiaoyinghe.svg)
+![release](https://img.shields.io/github/release/zhoutinglan/xiaoyinghe.svg)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/zhoutinglan/xiaoyinghe)](https://github.com/zhoutinglan/xiaoyinghe/pulls)
 
 </div>
 
@@ -55,7 +55,7 @@ https://github.com/UndCover/PyramidStore/
 
 ## 📲软件合集（软件安装）
 ### TVBox for Android
-- 小影盒：[下载 v1.0.0](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/releases) · [所有版本](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/releases)
+- 小影盒：[下载 v1.0.0](https://github.com/zhoutinglan/xiaoyinghe/releases) · [所有版本](https://github.com/zhoutinglan/xiaoyinghe/releases)
 
 
 ## 🎁福利18+
@@ -64,6 +64,8 @@ https://github.com/UndCover/PyramidStore/
 ## 𝟭. 更新记录
 
 >* **小影盒 v1.0.0：** 首个版本。基于 TVboxOSC 3.0.3 源码二次开发：应用名与包名独立、清空内置订阅源（全部由用户自行导入）、改用独立签名密钥、更新检查与发布流程接入自己的仓库。
+
+### 上游 TVboxOSC 历史记录（仅供追溯，不属于本应用版本）
 
 >* **2026/10/10 TVboxOSC v3.0.3：** 发布签名 APK，同步应用内更新清单和下载链接。
 
