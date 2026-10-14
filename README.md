@@ -12,23 +12,22 @@
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/kukuqi666/TVboxOSC?logo=Undertale)](https://github.com/kukuqi666/TVboxOSC/stargazers)
-![forks](https://img.shields.io/github/forks/kukuqi666/TVboxOSC.svg)
-![tag](https://img.shields.io/github/tag/kukuqi666/TVboxOSC.svg)
-![release](https://img.shields.io/github/release/kukuqi666/TVboxOSC.svg)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kukuqi666/TVboxOSC)](https://github.com/kukuqi666/TVboxOSC/pulls)
+[![GitHub stars](https://img.shields.io/github/stars/YOUR_GITHUB_USER/xiaoyinghe?logo=Undertale)](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/stargazers)
+![forks](https://img.shields.io/github/forks/YOUR_GITHUB_USER/xiaoyinghe.svg)
+![tag](https://img.shields.io/github/tag/YOUR_GITHUB_USER/xiaoyinghe.svg)
+![release](https://img.shields.io/github/release/YOUR_GITHUB_USER/xiaoyinghe.svg)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/YOUR_GITHUB_USER/xiaoyinghe)](https://github.com/YOUR_GITHUB_USER/xiaoyinghe/pulls)
 
 </div>
 
 
 ## 📖介绍
-- 本仓库聚合了APP、解析源、直播源等项目，总之你要的一个仓库全搞定(拉到👇有福利)
+- 小影盒：基于 TVBox 开源的 Android 影视播放器，本仓库为二次开发版本。
 
-**3.0.0 史诗级大更新：UI 重做，修复已知 Bug，完善核心功能。**
-TVboxOSC 从 **3.0.0** 开始使用应用名 `TVboxOSC`、包名 `com.xiaoyinghe.tv`。
-保留原有半透明风格，完善来源、壁纸、直播和本地视频功能，历史和收藏在首页，设置集中在“我的”。
-关于页面重新设计，新增更新动画、自动检测新版本和 Wi-Fi 后台下载，完成后由用户确认安装。
-2.x 使用不同包名，首次安装 3.x 为独立应用，旧数据不会自动迁移。
+**版本 1.0.0（首个版本）**
+基于 TVboxOSC 3.0.3 源码二次开发：应用名 `小影盒`、包名 `com.xiaoyinghe.tv`，与原版互不冲突、可同时安装。
+不内置任何订阅源，全部由用户自行导入；使用独立签名密钥；更新检查与发布流程接入本仓库。
+保留半透明风格，来源、壁纸、直播和本地视频功能完整，历史和收藏在首页，设置集中在“我的”。
 
 ### 开发与自动发布
 

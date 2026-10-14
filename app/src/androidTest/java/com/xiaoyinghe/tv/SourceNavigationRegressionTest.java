@@ -42,19 +42,19 @@ public class SourceNavigationRegressionTest extends InstrumentationTestCase {
                         ((android.widget.TextView) main.findViewById(R.id.tvVodApi)).getText().toString());
             });
             Thread.sleep(400);
-            capture("tvboxosc-my-settings.png");
+            capture("xiaoyinghe-my-settings.png");
             onMain(() -> main.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT));
             waitUntil(() -> main.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT);
             Thread.sleep(400);
-            capture("tvboxosc-my-portrait.png");
+            capture("xiaoyinghe-my-portrait.png");
             onMain(() -> ((android.widget.ScrollView) main.findViewById(R.id.my_scroll)).scrollBy(0,
                     main.findViewById(R.id.llAbout).getHeight()));
             Thread.sleep(300);
-            capture("tvboxosc-my-sources.png");
+            capture("xiaoyinghe-my-sources.png");
             onMain(() -> main.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
             waitUntil(() -> main.getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE);
             Thread.sleep(400);
-            capture("tvboxosc-my-landscape.png");
+            capture("xiaoyinghe-my-landscape.png");
             MainActivity current = main;
             for (int kind : new int[]{SourcePickerDialog.LIVE, SourcePickerDialog.WALLPAPER}) {
                 SourcePickerDialog picker = new SourcePickerDialog(current, kind, () -> {});
@@ -121,7 +121,7 @@ public class SourceNavigationRegressionTest extends InstrumentationTestCase {
                 assertTrue(navigation.isShown());
                 assertTrue(main.findViewById(R.id.local_folders).isShown());
             });
-            Thread.sleep(400); capture("tvboxosc-local-tab.png");
+            Thread.sleep(400); capture("xiaoyinghe-local-tab.png");
             waitUntil(() -> ((androidx.recyclerview.widget.RecyclerView) main.findViewById(R.id.local_folders)).findViewHolderForAdapterPosition(0) != null);
             onMain(() -> ((androidx.recyclerview.widget.RecyclerView) main.findViewById(R.id.local_folders)).findViewHolderForAdapterPosition(0).itemView.performClick());
             videos = getInstrumentation().waitForMonitorWithTimeout(monitor, 5000);

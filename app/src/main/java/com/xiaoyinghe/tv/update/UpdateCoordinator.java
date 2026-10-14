@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class UpdateCoordinator {
     public static final String OPEN_UPDATES = "open_updates";
-    private static final String DOWNLOAD = "tvboxosc-update-download";
+    private static final String DOWNLOAD = "xiaoyinghe-update-download";
     private UpdateCoordinator() {}
 
     public static void start(Context context) {
@@ -30,14 +30,14 @@ public final class UpdateCoordinator {
         store.clearInstalled();
         // Development APKs use a different certificate from the production release.
         if (BuildConfig.DEBUG) return;
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork("tvboxosc-update-periodic", ExistingPeriodicWorkPolicy.KEEP,
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork("xiaoyinghe-update-periodic", ExistingPeriodicWorkPolicy.KEEP,
                 new PeriodicWorkRequest.Builder(UpdateWorker.class, 12, TimeUnit.HOURS)
                         .setConstraints(network(NetworkType.CONNECTED)).build());
         if (System.currentTimeMillis() - store.prefs.getLong("last_check", 0) > TimeUnit.HOURS.toMillis(6)) check(context);
     }
 
     public static void check(Context context) {
-        WorkManager.getInstance(context).enqueueUniqueWork("tvboxosc-update-check", ExistingWorkPolicy.KEEP,
+        WorkManager.getInstance(context).enqueueUniqueWork("xiaoyinghe-update-check", ExistingWorkPolicy.KEEP,
                 new OneTimeWorkRequest.Builder(UpdateWorker.class).setConstraints(network(NetworkType.CONNECTED)).build());
     }
 
@@ -79,7 +79,7 @@ public final class UpdateCoordinator {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         try {
             notifications.notify(3000, new NotificationCompat.Builder(context, "app_updates").setSmallIcon(R.drawable.ic_update_status)
-                    .setContentTitle("TVboxOSC " + version + " 已准备好")
+                    .setContentTitle("小影盒 " + version + " 已准备好")
                     .setContentText("后台下载完成，点击查看并安装更新").setContentIntent(intent).setAutoCancel(true).build());
         } catch (SecurityException ignored) { /* About and the home hint remain available without notification permission. */ }
     }

@@ -28,7 +28,7 @@ public class StartupRegressionTest extends InstrumentationTestCase {
             });
             Bitmap screenshot = getInstrumentation().getUiAutomation().takeScreenshot();
             assertNotNull(screenshot);
-            try (FileOutputStream output = new FileOutputStream(new File(getInstrumentation().getTargetContext().getExternalFilesDir(null), "tvboxosc-startup.png"))) {
+            try (FileOutputStream output = new FileOutputStream(new File(getInstrumentation().getTargetContext().getExternalFilesDir(null), "xiaoyinghe-startup.png"))) {
                 screenshot.compress(Bitmap.CompressFormat.PNG, 100, output);
             } finally { screenshot.recycle(); }
             main = (MainActivity) getInstrumentation().waitForMonitorWithTimeout(monitor, 5000);

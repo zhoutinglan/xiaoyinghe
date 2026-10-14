@@ -28,7 +28,7 @@ public final class UpdateStore {
         catch (Exception ignored) { return null; }
     }
     public File apk(UpdateManifest manifest) {
-        return new File(context.getFilesDir(), "updates/TVboxOSC-v" + manifest.version + ".apk");
+        return new File(context.getFilesDir(), "updates/xiaoyinghe-v" + manifest.version + ".apk");
     }
     public boolean hasReadyUpdate() {
         UpdateManifest manifest = manifest();
