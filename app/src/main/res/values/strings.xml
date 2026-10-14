@@ -36,8 +36,15 @@
         <item>https://doh.360.cn/dns-query</item>
     </string-array>
 
-    <!-- 本应用不内置任何订阅源：首次启动不会自动写入第三方源，全部由用户自行导入。 -->
-    <string-array name="api"></string-array>
+    <!-- 内置订阅：App 自带的本地配置文件（assets 里），不依赖网络，永远不会「订阅失败」。
+         不内置任何需要联网的第三方源；要加在线源请在「订阅」页自行导入。 -->
+    <string-array name="api">
+        <item>assets://subscriptions/r18.json</item>
+        <item>assets://subscriptions/18cn.json</item>
+    </string-array>
 
-    <string-array name="api_name"></string-array>
+    <string-array name="api_name">
+        <item>R18（内置）</item>
+        <item>18cn（内置）</item>
+    </string-array>
 </resources>

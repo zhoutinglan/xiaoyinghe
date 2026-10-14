@@ -230,19 +230,36 @@ class SubscriptionActivity : BaseVbActivity<ActivitySubscriptionBinding>() {
     }
 
     private fun addSubscription(name: String, url: String, checked: Boolean) {
-        if (url.startsWith("clan://") || url.startsWith("content://")) {
-            addSub2List(name, url, checked)
+        val typed = url.trim()
+        if (typed.isEmpty()) {
+            ToastUtils.showShort("订阅格式不正确")
+            return
+        }
+        // 本地资源不需要联网：内置配置 assets://、本地文件 content:// / file://
+        if (typed.startsWith("clan://") || typed.startsWith("content://")
+            || typed.startsWith("assets://") || typed.startsWith("file://")) {
+            addSub2List(name, typed, checked)
             mSubscriptionAdapter.setNewData(mSubscriptions)
-        } else if (url.startsWith("http")) {
-            showLoadingDialog()
-            OkGo.get<String>(url)
-                .tag("get_subscription")
-                .execute(object : AbsCallback<String?>() {
+            return
+        }
+        // 用户经常忘记写 http://，这里补上（底层 SourceManager 也会补）
+        val httpUrl = if (typed.startsWith("http://") || typed.startsWith("https://")) typed else "http://$typed"
+        // GitHub 的 raw 域名在国内网络经常直接连不上，统一改走加速镜像
+        val fetchUrl = com.xiaoyinghe.tv.util.SourceManager.mirror(httpUrl)
+        showLoadingDialog()
+        OkGo.get<String>(fetchUrl)
+            .tag("get_subscription")
+            .execute(object : AbsCallback<String?>() {
                     override fun onSuccess(response: Response<String?>) {
                         dismissLoadingDialog()
+                        val body = response.body()
+                        if (isNotAConfig(body)) {
+                            ToastUtils.showLong("该地址返回的不是订阅配置（可能是图片或网页），未添加")
+                            return
+                        }
                         try {
-                            val json = JsonParser.parseString(response.body()).asJsonObject
-                            com.xiaoyinghe.tv.util.SourceManager.record(url, json.toString())
+                            val json = JsonParser.parseString(body).asJsonObject
+                            com.xiaoyinghe.tv.util.SourceManager.record(httpUrl, json.toString())
                             // 多线路?
                             val urls = json["urls"]
                             // 多仓?
@@ -294,10 +311,11 @@ class SubscriptionActivity : BaseVbActivity<ActivitySubscriptionBinding>() {
                                         .show()
                                 }
                             } else { // 单线路/其余
-                                addSub2List(name, url, checked)
+                                addSub2List(name, httpUrl, checked)
                             }
                         } catch (th: Throwable) {
-                            addSub2List(name, url, checked)
+                            addSub2List(name, httpUrl, checked)
+                            ToastUtils.showLong("已添加，但该地址不是标准 JSON 配置，可能无法加载内容")
                         }
                         mSubscriptionAdapter.setNewData(mSubscriptions)
                     }
@@ -310,11 +328,37 @@ class SubscriptionActivity : BaseVbActivity<ActivitySubscriptionBinding>() {
                     override fun onError(response: Response<String?>) {
                         super.onError(response)
                         dismissLoadingDialog()
-                        ToastUtils.showLong("订阅失败,请检查地址或网络状态")
+                        ToastUtils.showLong(describeFailure(response.code(), response.exception))
                     }
                 })
-        } else {
-            ToastUtils.showShort("订阅格式不正确")
+    }
+
+    /** 图片、HTML 之类的内容不是订阅配置，加进去也用不了，直接拦下并说明。 */
+    private fun isNotAConfig(body: String?): Boolean {
+        if (body.isNullOrEmpty()) return true
+        val broken = body.count { it == '\uFFFD' }
+        return broken > 20 || body.startsWith("\uFFFD") || body.startsWith("BM")
+    }
+
+    /** 把失败原因说清楚，而不是一律「订阅失败,请检查地址或网络状态」。 */
+    private fun describeFailure(code: Int, error: Throwable?): String {
+        if (code == 404) return "地址不存在（404）：该配置文件可能已被删除"
+        if (code == 401 || code == 403) return "服务器拒绝访问（$code）：该地址可能需要登录"
+        if (code in 500..599) return "对方服务器出错（$code），请稍后再试"
+        val detail = generateSequence(error) { it.cause }
+            .mapNotNull { it.message }
+            .joinToString(" ")
+            .lowercase()
+        return when {
+            "unable to resolve host" in detail || "unknownhost" in detail ||
+                "nodename nor servname" in detail || "no address associated" in detail ->
+                "域名解析失败：该域名可能已注销或被 DNS 污染\n可到「设置 → 安全DNS」开启 DoH 后重试"
+            "timeout" in detail || "timed out" in detail ->
+                "连接超时：服务器不可达，该地址可能已被网络封锁"
+            "ssl" in detail || "certificate" in detail ->
+                "HTTPS 握手失败：可能是证书问题或网络干扰"
+            code > 0 -> "订阅失败（HTTP $code）：请检查地址"
+            else -> "订阅失败,请检查地址或网络状态"
         }
     }
 

@@ -25,6 +25,24 @@ public final class SourceManager {
     public interface ContentResult { void onResult(String content, String error); }
     private static final ExecutorService IO = Executors.newFixedThreadPool(2);
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
+
+    /** GitHub 的 raw 域名在国内网络经常直接连不上，这里统一改走加速镜像。
+     *  放在一处，保证「添加订阅」和「加载配置」用的是同一套规则。 */
+    private static final String[] MIRRORS = {"https://ghproxy.net/", "https://gh-proxy.com/"};
+    private static final String[] GITHUB_HOSTS = {
+            "https://raw.githubusercontent.com/", "http://raw.githubusercontent.com/",
+            "https://github.com/", "http://github.com/",
+            "https://gist.githubusercontent.com/", "http://gist.githubusercontent.com/",
+            "https://objects.githubusercontent.com/", "http://objects.githubusercontent.com/"};
+
+    /** 把 GitHub 地址换成镜像地址；已经是镜像地址或非 GitHub 地址原样返回。 */
+    public static String mirror(String url) {
+        if (url == null) return null;
+        for (String mirror : MIRRORS) if (url.startsWith(mirror)) return url;
+        for (String host : GITHUB_HOSTS) if (url.startsWith(host)) return MIRRORS[0] + url;
+        return url;
+    }
+
     public static String currentName() {
         String url = Hawk.get(HawkConfig.API_URL, "");
         ArrayList<Subscription> items = Hawk.get(HawkConfig.SUBSCRIPTIONS, new ArrayList<>());
@@ -75,8 +93,10 @@ public final class SourceManager {
             try (InputStream input = App.getInstance().getContentResolver().openInputStream(Uri.parse(url))) { content = text(input); }
         } else {
             if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
-            try (okhttp3.Response response = OkGo.getInstance().getOkHttpClient().newCall(new Request.Builder().url(url).header("User-Agent", "okhttp/3.15").build()).execute()) {
+            String fetchUrl = mirror(url);
+            try (okhttp3.Response response = OkGo.getInstance().getOkHttpClient().newCall(new Request.Builder().url(fetchUrl).header("User-Agent", "okhttp/3.15").build()).execute()) {
                 if (!response.isSuccessful() || response.body() == null) throw new java.io.IOException("拉取配置失败：HTTP " + response.code());
+                // 以实际请求到的地址作为基准，配置里的相对路径（./jar/xxx）才能拼对
                 url = response.request().url().toString(); content = text(response.body().byteStream());
             }
         }
@@ -109,7 +129,7 @@ public final class SourceManager {
                 } else if (url.startsWith("content://") || url.startsWith("file://")) {
                     try (InputStream input = App.getInstance().getContentResolver().openInputStream(Uri.parse(url))) { content = text(input); }
                 } else {
-                    Request.Builder request = new Request.Builder().url(url).header("User-Agent", "okhttp/3.15");
+                    Request.Builder request = new Request.Builder().url(mirror(url)).header("User-Agent", "okhttp/3.15");
                     headers.forEach(request::header);
                     try (okhttp3.Response response = OkGo.getInstance().getOkHttpClient().newCall(request.build()).execute()) {
                         if (response.isSuccessful() && response.body() != null) content = text(response.body().byteStream());
