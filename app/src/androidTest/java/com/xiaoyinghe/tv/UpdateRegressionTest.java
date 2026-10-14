@@ -26,6 +26,7 @@ public class UpdateRegressionTest extends InstrumentationTestCase {
     private Map<String, ?> original;
     private ExecutorService executor;
     private static final String MIRROR = "https://gh-proxy.com/";
+    private static final String MIRROR2 = "https://ghproxy.net/";
     private static final String MANIFEST_URL = "https://raw.githubusercontent.com/" + BuildConfig.PROJECT_OWNER + "/" + BuildConfig.PROJECT_REPO + "/main/update.json";
     private static final String APK_URL = "https://github.com/" + BuildConfig.PROJECT_OWNER + "/" + BuildConfig.PROJECT_REPO + "/releases/download/v3.0.3/xiaoyinghe-v3.0.3.apk";
     private static final String MANIFEST = "{\"version\":\"3.0.3\",\"version_code\":" + (BuildConfig.VERSION_CODE + 1) + ",\"package_name\":\"" + BuildConfig.APPLICATION_ID + "\","
@@ -70,16 +71,16 @@ public class UpdateRegressionTest extends InstrumentationTestCase {
         assertEquals((long) BuildConfig.VERSION_CODE + 1, reopened.manifest().versionCode);
         assertEquals(2, FakeWorker.urls.size());
         assertTrue(FakeWorker.urls.get(0).startsWith(MIRROR + MANIFEST_URL + "?t="));
-        assertTrue(FakeWorker.urls.get(1).startsWith(MANIFEST_URL + "?t="));
+        assertTrue(FakeWorker.urls.get(1).startsWith(MIRROR2 + MANIFEST_URL + "?t="));
     }
-    public void testManifestNetworkFailureFallsBackToOfficial() {
+    public void testManifestNetworkFailureFallsBackToSecondMirror() {
         FakeWorker.networkFailures = 1;
         FakeWorker.bodies.add(MANIFEST);
         assertEquals(androidx.work.ListenableWorker.Result.success(), worker(false).doWork());
         assertEquals(UpdateStore.AVAILABLE, store.state());
         assertEquals(2, FakeWorker.urls.size());
         assertTrue(FakeWorker.urls.get(0).startsWith(MIRROR + MANIFEST_URL + "?t="));
-        assertTrue(FakeWorker.urls.get(1).startsWith(MANIFEST_URL + "?t="));
+        assertTrue(FakeWorker.urls.get(1).startsWith(MIRROR2 + MANIFEST_URL + "?t="));
     }
     public void testEqualVersionDoesNotDownload() {
         FakeWorker.bodies.add(MANIFEST.replace("3.0.3", BuildConfig.VERSION_NAME).replace("\"version_code\":" + (BuildConfig.VERSION_CODE + 1), "\"version_code\":" + BuildConfig.VERSION_CODE));
@@ -100,28 +101,31 @@ public class UpdateRegressionTest extends InstrumentationTestCase {
         assertEquals(UpdateStore.ERROR, store.state());
         assertFalse(store.hasReadyUpdate());
         assertFalse(store.apk(store.manifest()).exists());
-        assertEquals(2, FakeWorker.urls.size());
+        assertEquals(3, FakeWorker.urls.size());
         assertEquals(MIRROR + APK_URL, FakeWorker.urls.get(0));
-        assertEquals(APK_URL, FakeWorker.urls.get(1));
+        assertEquals(MIRROR2 + APK_URL, FakeWorker.urls.get(1));
+        assertEquals(APK_URL, FakeWorker.urls.get(2));
     }
-    public void testDownloadNetworkFailureFallsBackToOfficial() {
+    public void testDownloadNetworkFailureFallsBackToSecondMirror() {
         store.prefs.edit().putString("manifest", MANIFEST).commit();
         FakeWorker.networkFailures = 1;
         FakeWorker.bodies.add("abd");
         worker(true).doWork();
-        assertEquals(2, FakeWorker.urls.size());
+        assertEquals(3, FakeWorker.urls.size());
         assertEquals(MIRROR + APK_URL, FakeWorker.urls.get(0));
-        assertEquals(APK_URL, FakeWorker.urls.get(1));
+        assertEquals(MIRROR2 + APK_URL, FakeWorker.urls.get(1));
+        assertEquals(APK_URL, FakeWorker.urls.get(2));
         assertFalse(store.hasReadyUpdate());
     }
-    public void testInvalidMirrorArchiveFallsBackToOfficial() {
+    public void testInvalidMirrorArchiveFallsBackThroughRoutes() {
         store.prefs.edit().putString("manifest", MANIFEST).commit();
         FakeWorker.bodies.add("abc"); // Correct checksum, but not an APK for this app.
         FakeWorker.bodies.add("abd");
         worker(true).doWork();
-        assertEquals(2, FakeWorker.urls.size());
+        assertEquals(3, FakeWorker.urls.size());
         assertEquals(MIRROR + APK_URL, FakeWorker.urls.get(0));
-        assertEquals(APK_URL, FakeWorker.urls.get(1));
+        assertEquals(MIRROR2 + APK_URL, FakeWorker.urls.get(1));
+        assertEquals(APK_URL, FakeWorker.urls.get(2));
         assertFalse(store.hasReadyUpdate());
     }
 

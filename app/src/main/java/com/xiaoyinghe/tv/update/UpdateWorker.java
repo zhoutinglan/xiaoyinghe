@@ -21,8 +21,10 @@ public class UpdateWorker extends Worker {
     /** 仓库地址来自 gradle.properties（project.owner / project.repo），改一处即可。 */
     private static final String REPOSITORY = BuildConfig.PROJECT_OWNER + "/" + BuildConfig.PROJECT_REPO;
     private static final String MANIFEST_URL = "https://raw.githubusercontent.com/" + REPOSITORY + "/main/update.json";
-    // Use the same mirror-first order for every update check and APK download.
-    private static final String[] ROUTES = {"https://gh-proxy.com/", ""};
+    // Mirror-first, then the official URL. Measured from a mainland connection only
+    // gh-proxy.com and ghproxy.net answer at all (jsDelivr, ghfast, gh.llkk.cc and the rest are
+    // unreachable), and both flap independently, so the second mirror is the real fallback.
+    private static final String[] ROUTES = {"https://gh-proxy.com/", "https://ghproxy.net/", ""};
     private final OkHttpClient client = new OkHttpClient.Builder().connectTimeout(12, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).callTimeout(2, TimeUnit.MINUTES).build();
     // A 40 MB APK over a slow international link takes tens of minutes, so the total-call timeout
